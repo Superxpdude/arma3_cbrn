@@ -18,6 +18,12 @@ private _tickRate = 1; // How many seconds per tick. Increase if performance is 
 private _damageDiv = 60 / _tickRate; // Blood loss multiplier per tick
 private _bloodLossPerMin = 10; // Maximum blood loss per minute (unprotected)
 
+// Turn on the chemical detector UI
+"SXP_CBRN_DETECTOR" cutRsc ["RscWeaponChemicalDetector", "PLAIN", 1, false];
+// Make sure we can access the detector
+private _detectorUI = uiNamespace getVariable "RscWeaponChemicalDetector";
+private _detectorObj = _detectorUI displayCtrl 101;
+
 // Start our loop
 while {SXP_CBRN_enabled} do {
 
@@ -69,11 +75,7 @@ while {SXP_CBRN_enabled} do {
 	} forEach _zones
 	
 	// CHEMICAL DETECTOR SECTION
-	// This needs to be tested in detail
-	// "SXP_CBRN_CHEMICAL_DETECTOR" cutRsc ["RscWeaponChemicalDetector", "PLAIN", 1, false];
-	// private _ui = uiNamespace getVariable "RscWeaponChemicalDetector";
-	// private _obj = _ui displayCtrl 101;
-	// _obj ctrlAnimateModel ["Threat_Level_Source", _hazard, true]; // Might need to use 'toFixed' and 'parseNumber' here
+	_detectorObj ctrlAnimateModel ["Threat_Level_Source", _hazard, true]; // Might need to use 'toFixed' and 'parseNumber' here
 	
 	// DAMAGE SECTION
 	// Calculate damage based on hazard, and equipped gear

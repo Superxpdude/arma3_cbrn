@@ -5,6 +5,7 @@ class SXP_CBRN
 	{
 		file = "cbrn\functions";
 		class enterZone {}; // Enter CBRN zone
+		class getProtectionValue {}; // Return the protection value of equipped gear
 		class init {preInit = 1;}; // CBRN init
 		class process {}; // CBRN process loop
 	};

@@ -124,6 +124,8 @@ SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 	_detectorObj ctrlAnimateModel ["Threat_Level_Source", _hazardDisplay, true]; // Might need to use 'toFixed' and 'parseNumber' here
 	
 	// Damage section
-	private _damage = ((0.24/60)/diag_fps) * _hazard;
+	private _damage = ((0.24/60)/diag_fps) * (_hazard * (1 - ([player] call SXP_CBRN_fnc_getProtectionValue)));
 	player setVariable ["ace_medical_bloodVolume", (player getVariable ["ace_medical_bloodVolume", 6]) - _damage];
+	
+	hintSilent format ["Player hazard: %1", (_hazard * (1 - ([player] call SXP_CBRN_fnc_getProtectionValue)))];
 }];

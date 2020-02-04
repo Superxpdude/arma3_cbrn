@@ -39,6 +39,7 @@ if (isNull _unit) exitWith {[0,0]};
 #define FACEMASK_PROTECTION [0,0.1]
 #define NO_PROTECTION [0,0]
 
+// List of CBRN protected CSAT uniforms (the ones with the air unit on the upper back). Viper uniforms not included.
 private _csatUniforms = [
 	"U_O_CombatUniform_ocamo",
 	"U_O_CombatUniform_oucamo",
@@ -99,10 +100,11 @@ private _maskPro = switch (toLower (goggles _unit)) do {
 	case "g_cbrn_m50_hood";
 	case "g_cbrn_s10": {
 		if ((backpack _unit) in _cbrnBackpacks) then {
+			// Having a CBRN backpack at all provides the full protection with these masks
 			MASK_AIR_PROTECTION
 		} else {
 			// No CBRN backpack
-			MASK_PROTECTION
+			FILTERED_MASK_PROTECTION
 		};
 	};
 	// Laws of war face masks

@@ -32,6 +32,7 @@ if (!hasInterface) exitWith {};
 // Make sure we can access the detector
 private _detectorUI = uiNamespace getVariable "RscWeaponChemicalDetector";
 private _detectorObj = _detectorUI displayCtrl 101;
+private _dps = ((getMissionConfigValue ["SXP_CBRN_damagePerMinute", 0.48]) param [0,0.48,[0]])/60; // Calculate the damage per second value of a maximum hazard zone
 
 SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 	// Set some variables
@@ -74,7 +75,7 @@ SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 	
 	// Damage section
 	private _protection = [player] call SXP_CBRN_fnc_getProtectionValue;
-	private _playerHazard = ((_hazard - (_protection select 0)) max 0) * (1 - (_protection select 1));
-	private _damage = ((0.48/60)/diag_fps) * _playerHazard;
+	private _playerHazard = ((_hazard - (_protection select 0)) max 0) * (1 - (_protection select 1)); // Maximum hazard value with the player resistances applied
+	private _damage = ((_dps/60)/diag_fps) * _playerHazard;
 	player setVariable ["ace_medical_bloodVolume", (player getVariable ["ace_medical_bloodVolume", 6]) - _damage];
 }];

@@ -17,44 +17,8 @@ params [
 	["_unit", objNull, [objNull]]
 ];
 
-// If the unit is null, return 0
-if (isNull _unit) exitWith {0};
-
-_uniformProtection = 0.4;
-_maskProtection = 0.4;
-
-_cbrnUniforms = [
-	"U_C_CBRN_Suit_01_Blue_F",
-	"U_B_CBRN_Suit_01_MTP_F",
-	"U_B_CBRN_Suit_01_Tropic_F",
-	"U_C_CBRN_Suit_01_White_F",
-	"U_B_CBRN_Suit_01_Wdl_F",
-	"U_I_CBRN_Suit_01_AAF_F",
-	"U_I_E_CBRN_Suit_01_EAF_F",
-	"tg_u_gorka_cbrn_black",
-	"tg_u_gorka_cbrn_black_alt",
-	"tg_u_gorka_cbrn"
-];
-
-_cbrnMasks = [
-	"G_AirPurifyingRespirator_02_black_F",
-	"G_AirPurifyingRespirator_02_olive_F",
-	"G_AirPurifyingRespirator_02_sand_F",
-	"G_AirPurifyingRespirator_01_F",
-	"G_RegulatorMask_F",
-	"G_CBRN_M04",
-	"G_CBRN_M04_Hood",
-	"G_CBRN_M50",
-	"G_CBRN_M50_Hood",
-	"G_CBRN_S10"
-];
-
-/*
-	Basic face masks. Maybe give these a low protection value at some point
-	G_Respirator_blue_F
-	G_Respirator_white_F
-	G_Respirator_yellow_F
-*/
+// If the unit is null, return 0,0
+if (isNull _unit) exitWith {[0,0]};
 
 /*
 	PROTECTION VALUES:
@@ -105,14 +69,35 @@ private _maskPro = switch (toLower (goggles _unit)) do {
 	// NATO mask (no filter)
 	case "g_airpurifyingrespirator_01_nofilter_f";
 	case "g_regulatormask_f": {
-		if ((backpack _unit) in _cbrnBackpacks) do {
+		if ((backpack _unit) in _cbrnBackpacks) then {
 			// Unit has CBRN backpack
-			private _backpackTextures = getObjectTextures (backpackContainer _unit)
+			private _backpackTextures = getObjectTextures (backpackContainer _unit);
+			// Check if the hose is connected
+			if ((_backpackTextures select 1 != "") OR (_backpackTextures select 2 != "")) then {
+				// Hose connected
+				MASK_AIR_PROTECTION
+			} else {
+				MASK_PROTECTION
+			};
 		} else {
 			// No CBRN backpack
 			MASK_PROTECTION
 		};
 	};
+	// CBRN mod masks. These don't support hose textures.
+	case "g_cbrn_m04";
+	case "g_cbrn_m04_hood";
+	case "g_cbrn_m50";
+	case "g_cbrn_m50_hood";
+	case "g_cbrn_s10": {
+		if ((backpack _unit) in _cbrnBackpacks) then {
+			MASK_AIR_PROTECTION
+		} else {
+			// No CBRN backpack
+			MASK_PROTECTION
+		};
+	};
+	// Laws of war face masks
 	case "g_respirator_blue_f";
 	case "g_respirator_white_f";
 	case "g_respirator_yellow_f": {FACEMASK_PROTECTION}; // Super basic protection for face masks
@@ -120,17 +105,20 @@ private _maskPro = switch (toLower (goggles _unit)) do {
 };
 
 // Uniform protection values
-switch (toLower (uniform player)) do {
-	case "u_c_cbrn_suit_01_blue_f": {_uniPro = 0.2; _uniResist = 0.3;};
+private _uniformPro = switch (toLower (uniform player)) do {
+	case "tg_u_gorka_cbrn";
+	case "tg_u_gorka_cbrn_black_alt";
+	case "tg_u_gorka_cbrn_black";
+	case "u_i_e_cbrn_suit_01_eaf_f";
+	case "u_i_cbrn_suit_01_aaf_f";
+	case "u_b_cbrn_suit_01_wdl_f";
+	case "u_c_cbrn_suit_01_white_f";
+	case "u_b_cbrn_suit_01_tropic_f";
+	case "u_b_cbrn_suit_01_mtp_f";
+	case "u_c_cbrn_suit_01_blue_f": {CBRN_SUIT_PROTECTION};
 	default {NO_PROTECTION};
 };
 
-if ((uniform player) in _cbrnUniforms) then {
-	_protection = _protection + _uniformProtection;
-};
-
-if ((goggles player) in _cbrnMasks) then {
-	_protection = _protection + _maskProtection;
-};
+private _protection = [(_maskPro select 0) + (_uniformPro select 0),(_maskPro select 1) + (_uniformPro select 1)];
 
 _protection

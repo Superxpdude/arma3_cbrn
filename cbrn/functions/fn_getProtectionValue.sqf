@@ -8,8 +8,9 @@
 	Parameters:
 		0: Object - Unit to calculate protection value for
 		
-	Returns:
-		Number - Protection value of unit
+	Returns: Array
+		0: Number - Flat protection value of unit
+		1: Number - Percentage resistance of unit
 */
 
 params [
@@ -55,9 +56,74 @@ _cbrnMasks = [
 	G_Respirator_yellow_F
 */
 
-// Start with a protection of 0
-private _protection = 0;
+/*
+	PROTECTION VALUES:
+	
+	Filtered mask provides 10/20%.
+	Unfiltered mask provides 10/0%.
+	Mask with air provides 30/50%.
+	Mask with CSAT suit provides 30/50%.
+	CBRN or CSAT suits provide 20/10%.
+	
+	Total max protection is 50/60%. (At a hazard of 1 you take 0.2 damage).
+*/
 
+#define FILTERED_MASK_PROTECTION [0.1,0.2]
+#define MASK_PROTECTION [0.1,0]
+#define MASK_AIR_PROTECTION [0.3,0.5]
+#define CBRN_SUIT_PROTECTION [0.2,0.1]
+#define FACEMASK_PROTECTION [0,0.1]
+#define NO_PROTECTION [0,0]
+
+private _csatUniforms = [];
+private _cbrnBackpacks = [
+	"B_CombinationUnitRespirator_01_F",
+	"B_SCBA_01_F"
+];
+
+// Mask protection values
+private _maskPro = switch (toLower (goggles _unit)) do {
+	// CSAT masks (with filter)
+	case "g_airpurifyingrespirator_02_black_f";
+	case "g_airpurifyingrespirator_02_olive_f";
+	case "g_airpurifyingrespirator_02_sand_f";
+	// NATO mask (with filter)
+	case "g_airpurifyingrespirator_01_f": {
+		// Mask with filter means no air hose connected
+		if ((uniform _unit) in _csatUniforms) then {
+			// Mask with CSAT uniform (CBRN protected)
+			MASK_AIR_PROTECTION
+		} else {
+			// Mask only
+			FILTERED_MASK_PROTECTION
+		};
+	};
+	// CSAT masks (no filter)
+	case "g_airpurifyingrespirator_02_black_nofilter_f";
+	case "g_airpurifyingrespirator_02_olive_nofilter_f";
+	case "g_airpurifyingrespirator_02_sand_nofilter_f";
+	// NATO mask (no filter)
+	case "g_airpurifyingrespirator_01_nofilter_f";
+	case "g_regulatormask_f": {
+		if ((backpack _unit) in _cbrnBackpacks) do {
+			// Unit has CBRN backpack
+			private _backpackTextures = getObjectTextures (backpackContainer _unit)
+		} else {
+			// No CBRN backpack
+			MASK_PROTECTION
+		};
+	};
+	case "g_respirator_blue_f";
+	case "g_respirator_white_f";
+	case "g_respirator_yellow_f": {FACEMASK_PROTECTION}; // Super basic protection for face masks
+	default {NO_PROTECTION};
+};
+
+// Uniform protection values
+switch (toLower (uniform player)) do {
+	case "u_c_cbrn_suit_01_blue_f": {_uniPro = 0.2; _uniResist = 0.3;};
+	default {NO_PROTECTION};
+};
 
 if ((uniform player) in _cbrnUniforms) then {
 	_protection = _protection + _uniformProtection;

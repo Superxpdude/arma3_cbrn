@@ -39,7 +39,14 @@ if (isNull _unit) exitWith {[0,0]};
 #define FACEMASK_PROTECTION [0,0.1]
 #define NO_PROTECTION [0,0]
 
-private _csatUniforms = [];
+private _csatUniforms = [
+	"U_O_CombatUniform_ocamo",
+	"U_O_CombatUniform_oucamo",
+	"U_O_SpecopsUniform_ocamo",
+	"U_O_GhillieSuit",
+	"U_O_T_Soldier_F",
+	"U_O_T_Sniper_F"
+];
 private _cbrnBackpacks = [
 	"B_CombinationUnitRespirator_01_F",
 	"B_SCBA_01_F"

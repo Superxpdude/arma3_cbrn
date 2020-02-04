@@ -116,6 +116,12 @@ private _uniformPro = switch (toLower (uniform player)) do {
 	case "tg_u_gorka_cbrn";
 	case "tg_u_gorka_cbrn_black_alt";
 	case "tg_u_gorka_cbrn_black";
+	case "u_o_combatuniform_ocamo";
+	case "u_o_combatuniform_oucamo";
+	case "u_o_specopsuniform_ocamo";
+	case "u_o_ghilliesuit";
+	case "u_o_t_soldier_f";
+	case "u_o_t_sniper_f";
 	case "u_i_e_cbrn_suit_01_eaf_f";
 	case "u_i_cbrn_suit_01_aaf_f";
 	case "u_b_cbrn_suit_01_wdl_f";

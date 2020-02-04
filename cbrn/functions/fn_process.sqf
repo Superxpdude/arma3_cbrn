@@ -14,10 +14,6 @@
 // Only run this on clients with players
 if (!hasInterface) exitWith {};
 
-private _tickRate = 1; // How many seconds per tick. Increase if performance is poor.
-private _damageDiv = 60 / _tickRate; // Blood loss multiplier per tick
-private _bloodLossPerMin = 10; // Maximum blood loss per minute (unprotected). Default ACE blood level is 6 with advanced medication and diagnose.
-
 /*
 	ACE Blood Info
 	Players start at 6 litres of blood.
@@ -36,53 +32,6 @@ private _bloodLossPerMin = 10; // Maximum blood loss per minute (unprotected). D
 // Make sure we can access the detector
 private _detectorUI = uiNamespace getVariable "RscWeaponChemicalDetector";
 private _detectorObj = _detectorUI displayCtrl 101;
-
-// Start our loop
-/*
-while {SXP_CBRN_enabled} do {
-	
-	// Set some variables
-	private _hazard = 0; // Maximum hazard for this loop
-	private _zones = + (player getVariable ["SXP_CBRN_player_areas", []]); // Copy the array so that we can modify the original
-	private _damage = 0; // Damage for this loop
-	
-	{
-		if (player inArea _x) then {
-			// Player in CBRN area
-			private _zoneIntensity = _x getVariable ["SXP_CBRN_intensity", 0];
-			private _zoneIntenseRange = _x getVariable ["SXP_CBRN_intenserange", 0];
-			private _zoneRange = ((triggerArea _x) select 0) max ((triggerArea _x) select 1);
-			private _zoneHazard = 0;
-			private _distance = player distance2D _x;
-			if (_distance <= _zoneIntenseRange) then {
-				// Player in max intensity range
-				_zoneHazard = _zoneIntensity;
-			} else {
-				// Player in falloff range
-				_zoneHazard = (((_distance - _zoneIntenseRange) / -(_zoneRange - _zoneIntenseRange)) + 1) * _zoneIntensity;
-			};
-			
-			// If this zone has the highest hazard this loop, set it as the loop hazard
-			if (_zoneHazard > _hazard) then {
-				_hazard = _zoneHazard;
-			};
-		} else {
-			// Player not in CBRN area
-			player setVariable ["SXP_CBRN_player_areas", (player getVariable ["SXP_CBRN_player_areas", []]) - [_x], true];
-		};
-	} forEach _zones;
-	
-	// CHEMICAL DETECTOR SECTION
-	_detectorObj ctrlAnimateModel ["Threat_Level_Source", _hazard, true]; // Might need to use 'toFixed' and 'parseNumber' here
-	
-	// DAMAGE SECTION
-	// Calculate damage based on hazard, and equipped gear
-	// Remove a portion of the player's blood based on remaining damage
-
-	// Wait before running again
-	sleep _tickRate;
-};
-*/
 
 SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 	// Set some variables
@@ -126,8 +75,6 @@ SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 	// Damage section
 	private _protection = [player] call SXP_CBRN_fnc_getProtectionValue;
 	private _playerHazard = ((_hazard - (_protection select 0)) max 0) * (1 - (_protection select 1));
-	private _damage = ((0.24/60)/diag_fps) * _playerHazard;
+	private _damage = ((0.48/60)/diag_fps) * _playerHazard;
 	player setVariable ["ace_medical_bloodVolume", (player getVariable ["ace_medical_bloodVolume", 6]) - _damage];
-	
-	hintSilent format ["Player hazard: %1", _playerHazard];
 }];

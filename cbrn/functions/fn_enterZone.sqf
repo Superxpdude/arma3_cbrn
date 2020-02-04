@@ -7,7 +7,7 @@
 	Trigger should use the following value for the condition:
 		"this && player in thisList"
 	
-	Trigger MUST be circular. It must have no height limit, and identical X/Y dimensions. Trigger must not be set to server only, and must be configured to activate multiple times.
+	Trigger MUST be circular. It must have no height limit, and identical X/Y dimensions. Trigger must not be set to server only, and must be set to "Repeatable".
 	
 	Parameters:
 		0: TRIGGER - Trigger that defines the zone

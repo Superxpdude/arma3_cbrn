@@ -14,7 +14,7 @@
 */
 
 // Set some variables
-SXP_CBRN_enabled = true; // Mark the script as enabled. This can be used to kill the rad loop later on
+SXP_CBRN_enabled = true; // Mark the script as enabled.
 
 // We need to spawn a thread for the process to keep looping. This only needs to be run on clients.
 if (hasInterface) then {

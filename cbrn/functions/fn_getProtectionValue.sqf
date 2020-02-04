@@ -45,7 +45,8 @@ private _csatUniforms = [
 	"U_O_SpecopsUniform_ocamo",
 	"U_O_GhillieSuit",
 	"U_O_T_Soldier_F",
-	"U_O_T_Sniper_F"
+	"U_O_T_Sniper_F",
+	"IP_U_O_CombatUniform_SnowHex"
 ];
 private _cbrnBackpacks = [
 	"B_CombinationUnitRespirator_01_F",
@@ -113,6 +114,7 @@ private _maskPro = switch (toLower (goggles _unit)) do {
 
 // Uniform protection values
 private _uniformPro = switch (toLower (uniform player)) do {
+	case "ip_u_o_combatuniform_snowhex";
 	case "tg_u_gorka_cbrn";
 	case "tg_u_gorka_cbrn_black_alt";
 	case "tg_u_gorka_cbrn_black";

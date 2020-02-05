@@ -29,10 +29,6 @@ if (!hasInterface) exitWith {};
 
 // Turn on the chemical detector UI
 "SXP_CBRN_DETECTOR" cutRsc ["RscWeaponChemicalDetector", "PLAIN", 1, false];
-// Make sure we can access the detector
-private _detectorUI = uiNamespace getVariable "RscWeaponChemicalDetector";
-private _detectorObj = _detectorUI displayCtrl 101;
-
 
 SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 	// Set some variables
@@ -69,10 +65,10 @@ SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 		};
 	} forEach _zones;
 	
-	private _hazardDisplay = (ceil (_hazard * 100)) / 100;
+	private _hazardDisplay = (ceil (_hazard * 1000)) / 100;
 	
 	// CHEMICAL DETECTOR SECTION
-	_detectorObj ctrlAnimateModel ["Threat_Level_Source", _hazardDisplay, true]; // Might need to use 'toFixed' and 'parseNumber' here
+	_detectorObj ctrlAnimateModel ["Threat_Level_Source", _hazardDisplay min 9.99, true]; // Might need to use 'toFixed' and 'parseNumber' here
 	
 	// Damage section
 	private _protection = [player] call SXP_CBRN_fnc_getProtectionValue;

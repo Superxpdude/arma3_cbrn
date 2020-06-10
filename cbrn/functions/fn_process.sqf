@@ -47,6 +47,8 @@ SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 			private _zoneRange = ((triggerArea _x) select 0) max ((triggerArea _x) select 1);
 			private _zoneHazard = 0;
 			private _distance = player distance2D _x;
+			// TODO: Rewrite this to use linearConversion
+			// _zoneHazard = linearConversion [_zoneIntenseRange,_zoneRange,_distance,_zoneIntensity,0,true];
 			if (_distance <= _zoneIntenseRange) then {
 				// Player in max intensity range
 				_zoneHazard = _zoneIntensity;
@@ -70,9 +72,28 @@ SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 	// CHEMICAL DETECTOR SECTION
 	_detectorObj ctrlAnimateModel ["Threat_Level_Source", _hazardDisplay min 9.99, true]; // Might need to use 'toFixed' and 'parseNumber' here
 	
+	// Sound section
+	if (("ChemicalDetector_01_watch_F" in (assignedItems player)) AND {SXP_CBRN_sound_enabled AND {_hazard > 0.1}}) then {
+		if ((cba_missionTime - SXP_CBRN_lastSoundTime) > (((1/((8 * _hazard)-0.6)) - 0.125) * SXP_CBRN_nextSoundVariation)) then {
+			//linearConversion [0.1,0.9,_hazard,2,0.02,true]
+			// Play the sound
+			playSound "sxp_cbrn_tick";
+			// Set the last sound time, and figure out our next variation
+			SXP_CBRN_lastSoundTime = cba_missionTime;
+			SXP_CBRN_nextSoundVariation = 0.8 + (random 0.4);
+		};
+	};
+	
 	// Damage section
 	private _protection = [player] call SXP_CBRN_fnc_getProtectionValue;
 	private _playerHazard = ((_hazard - (_protection select 0)) max 0) * (1 - (_protection select 1)); // Maximum hazard value with the player resistances applied
 	private _damage = (_dps/diag_fps) * _playerHazard;
 	player setVariable ["ace_medical_bloodVolume", (player getVariable ["ace_medical_bloodVolume", 6]) - _damage];
+	
+	if (SXP_CBRN_nextPPTime < cba_missionTime) then {
+		// Set visual effect
+		SXP_CBRN_pp_handle ppEffectAdjust [_playerHazard];
+		SXP_CBRN_pp_handle ppEffectCommit 5;
+		SXP_CBRN_nextPPTime = cba_missionTime + 1;
+	};
 }];

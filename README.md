@@ -6,6 +6,10 @@ To use this script, place the "CBRN" folder in your mission directory, and add t
 ```sqf
 #include "cbrn\config\CfgFunctions.hpp"
 ```
+You will also need to add a line to your CfgSounds class in description.ext:
+```sqf
+#include "cbrn\config\CfgSounds.hpp"
+```
 
 Once you have added the CBRN script to your mission, you will need to define your "hazard" zones. You will need to use triggers that meet the following criteria:
 1. The trigger must be circular, not square.

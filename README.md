@@ -20,7 +20,7 @@ Once you have added the CBRN script to your mission, you will need to define you
 
 To activate the triggers with the CBRN script, you will need to set the "Condition" field to:
 ```sqf
-this && player in thisList
+this && (vehicle player) in thisList
 ```
 The "On Activation" field will need to call the `SXP_CBRN_fnc_enterZone` function. Like so:
 ```sqf

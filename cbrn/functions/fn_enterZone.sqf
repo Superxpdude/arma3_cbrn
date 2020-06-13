@@ -34,7 +34,7 @@ if ((isNull _trigger) or (isNull _player)) exitWith {};
 // Exit if the player is not local
 if (!local _player) exitWith {};
 // Exit if the player is not in the trigger
-if !(player in (list _trigger)) exitWith {};
+if !((vehicle player) in (list _trigger)) exitWith {};
 
 // Set some variables on the trigger so that we can retrieve them later.
 _trigger setVariable ["SXP_CBRN_intensity", _intensity];

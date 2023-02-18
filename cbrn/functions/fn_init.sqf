@@ -18,7 +18,10 @@ SXP_CBRN_enabled = true; // Mark the script as enabled.
 SXP_CBRN_lastSoundTime = 0; // cba_missiontime of the last ticking sound
 SXP_CBRN_nextSoundVariation = 1; // Variation of the next ticking sound (can be +/- 20%)
 SXP_CBRN_sound_enabled = true; // Sounds enabled
-SXP_CBRN_nextPPTime = 0;
+SXP_CBRN_nextPPTime = 0; // Next post-process change time
+
+SXP_CBRN_true_hazard = 0; // Current "true" hazard level for the player, before resistances.
+SXP_CBRN_player_hazard = 0; // Current "effective" hazard for the player, after resistances.
 
 // Set up our post-process effects
 if (hasInterface) then {

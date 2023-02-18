@@ -96,4 +96,7 @@ SXP_CBRN_eh = addMissionEventHandler ["EachFrame", {
 		SXP_CBRN_pp_handle ppEffectCommit 5;
 		SXP_CBRN_nextPPTime = cba_missionTime + 1;
 	};
+	
+	SXP_CBRN_true_hazard = _hazard;
+	SXP_CBRN_player_hazard = _playerHazard;
 }];

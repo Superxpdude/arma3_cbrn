@@ -72,3 +72,12 @@ You can adjust the amount of damage dealt (expressed in blood loss per minute) b
 SXP_CBRN_damagePerMinute = 0.48;
 ```
 The number is the amount of blood lost per minute at a hazard of 1, with no CBRN protection. The default value is `0.48`.
+
+## Extensions
+The CBRN system will set the following variables on each iteration of the damage loop (currently on each frame), to be used by external scripts wishing to extend on the CBRN system's functionality.
+### SXP_CBRN_true_hazard
+Type: Number  
+The current "true" hazard level at the player's current position, calculated before any resistances are applied.
+### SXP_CBRN_player_hazard
+Type: Number  
+The current "effective" hazard level for the player, after resistances and absolute protection values are applied.

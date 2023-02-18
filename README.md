@@ -49,12 +49,12 @@ This script accounts for the usage of CBRN equipment to mitigate the effects of 
 |---|:---:|:---:|
 | Filtered gas mask (NATO/CSAT APRs) | 10 | 20% |
 | Unfiltered gas mask (APR without filter, civilian regulator) | 10 | 0% |
-| Unfiltered mask with **attached** air tank (SCBA/Combination Respirator)<sup>1</sup> | 30 | 50% |
+| Unfiltered mask with air tank (SCBA/Combination Respirator)<sup>1</sup> | 30 | 50% |
 | Filtered gas mask with CSAT fatigues<sup>2</sup> | 30 | 50% |
 | CBRN suit, or CSAT fatigues<sup>2</sup> | 20 | 10% |
 | Laws of War DLC medical face mask | 0 | 10% |
 
-<sup>1</sup>The script checks if the optional "air hose textures" are applied on the backpack to provide the full resistance. Use of an optional mod to allow the connection of the air hose is recommended.
+<sup>1</sup>Contact DLC radio backpacks are also considered air tanks for the purposes of this script, since squad leaders otherwise can't have long-range radios.
 
 <sup>2</sup>CSAT combat fatigues are canonically CBRN protected, as they feature self-contained oxygen systems.
 

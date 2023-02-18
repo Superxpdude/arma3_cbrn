@@ -40,6 +40,7 @@ if (isNull _unit) exitWith {[0,0]};
 #define NO_PROTECTION [0,0]
 
 // List of CBRN protected CSAT uniforms (the ones with the air unit on the upper back). Viper uniforms not included.
+// THESE LISTS ARE CASE-SENSITIVE FOR PERFORMANCE
 private _csatUniforms = [
 	"U_O_CombatUniform_ocamo",
 	"U_O_CombatUniform_oucamo",
@@ -47,11 +48,49 @@ private _csatUniforms = [
 	"U_O_GhillieSuit",
 	"U_O_T_Soldier_F",
 	"U_O_T_Sniper_F",
-	"IP_U_O_CombatUniform_SnowHex"
+	"tmtm_u_csatFatigues_atacsAu",
+	"tmtm_u_csatFatigues_atacsFg",
+	"tmtm_u_csatFatigues_black",
+	"tmtm_u_csatFatigues_blue",
+	"tmtm_u_csatFatigues_emr",
+	"tmtm_u_csatFatigues_grey",
+	"tmtm_u_csatFatigues_greyBlack",
+	"tmtm_u_csatFatigues_ldf",
+	"tmtm_u_csatFatigues_mtp",
+	"tmtm_u_csatFatigues_multicam",
+	"tmtm_u_csatFatigues_natoWdl",
+	"tmtm_u_csatFatigues_surpat",
+	"tmtm_u_csatFatigues_yellow"
 ];
+
+private _cbrnUniforms = _csatUniforms + [
+	"tmtm_u_granit_cbrn",
+	"tmtm_u_granit_cbrnBlackAlt",
+	"tmtm_u_granit_cbrnBlack",
+	"U_I_E_CBRN_Suit_01_EAF_F",
+	"U_I_CBRN_Suit_01_AAF_F",
+	"U_B_CBRN_Suit_01_Wdl_F",
+	"U_C_CBRN_Suit_01_White_F",
+	"U_B_CBRN_Suit_01_Tropic_F",
+	"U_B_CBRN_Suit_01_MTP_F",
+	"U_C_CBRN_Suit_01_Blue_F"
+];
+
+// CBRN protected backpacks. Includes radio backpacks for use by squad leaders 
 private _cbrnBackpacks = [
 	"B_CombinationUnitRespirator_01_F",
-	"B_SCBA_01_F"
+	"B_SCBA_01_F",
+	"B_RadioBag_01_black_F",
+	"B_RadioBag_01_digi_F",
+	"B_RadioBag_01_eaf_F",
+	"B_RadioBag_01_ghex_F",
+	"B_RadioBag_01_hex_F",
+	"B_RadioBag_01_mtp_F",
+	"B_RadioBag_01_tropic_F",
+	"B_RadioBag_01_oucamo_F",
+	"B_RadioBag_01_wdl_F",
+	"TMTM_B_RadioBag_01_darkgreen_b",
+	"TMTM_B_RadioBag_01_winter_b"
 ];
 
 // Mask protection values
@@ -62,12 +101,10 @@ private _maskPro = switch (toLower (goggles _unit)) do {
 	case "g_airpurifyingrespirator_02_sand_f";
 	// NATO mask (with filter)
 	case "g_airpurifyingrespirator_01_f": {
-		// Mask with filter means no air hose connected
-		if ((uniform _unit) in _csatUniforms) then {
-			// Mask with CSAT uniform (CBRN protected)
+		// Check to see which protection value we use
+		if (((backpack _unit) in _cbrnBackpacks) OR {(uniform _unit) in _csatUniforms}) then {
 			MASK_AIR_PROTECTION
 		} else {
-			// Mask only
 			FILTERED_MASK_PROTECTION
 		};
 	};
@@ -78,33 +115,11 @@ private _maskPro = switch (toLower (goggles _unit)) do {
 	// NATO mask (no filter)
 	case "g_airpurifyingrespirator_01_nofilter_f";
 	case "g_regulatormask_f": {
-		if ((backpack _unit) in _cbrnBackpacks) then {
-			// Unit has CBRN backpack
-			private _backpackTextures = getObjectTextures (backpackContainer _unit);
-			// Check if the hose is connected
-			if ((_backpackTextures select 1 != "") OR (_backpackTextures select 2 != "")) then {
-				// Hose connected
-				MASK_AIR_PROTECTION
-			} else {
-				MASK_PROTECTION
-			};
-		} else {
-			// No CBRN backpack
-			MASK_PROTECTION
-		};
-	};
-	// CBRN mod masks. These don't support hose textures.
-	case "g_cbrn_m04";
-	case "g_cbrn_m04_hood";
-	case "g_cbrn_m50";
-	case "g_cbrn_m50_hood";
-	case "g_cbrn_s10": {
-		if ((backpack _unit) in _cbrnBackpacks) then {
-			// Having a CBRN backpack at all provides the full protection with these masks
+		// Check to see which protection value we use
+		if (((backpack _unit) in _cbrnBackpacks) OR {(uniform _unit) in _csatUniforms}) then {
 			MASK_AIR_PROTECTION
 		} else {
-			// No CBRN backpack
-			FILTERED_MASK_PROTECTION
+			MASK_PROTECTION
 		};
 	};
 	// Laws of war face masks
@@ -115,26 +130,7 @@ private _maskPro = switch (toLower (goggles _unit)) do {
 };
 
 // Uniform protection values
-private _uniformPro = switch (toLower (uniform player)) do {
-	case "ip_u_o_combatuniform_snowhex";
-	case "tg_u_gorka_cbrn";
-	case "tg_u_gorka_cbrn_black_alt";
-	case "tg_u_gorka_cbrn_black";
-	case "u_o_combatuniform_ocamo";
-	case "u_o_combatuniform_oucamo";
-	case "u_o_specopsuniform_ocamo";
-	case "u_o_ghilliesuit";
-	case "u_o_t_soldier_f";
-	case "u_o_t_sniper_f";
-	case "u_i_e_cbrn_suit_01_eaf_f";
-	case "u_i_cbrn_suit_01_aaf_f";
-	case "u_b_cbrn_suit_01_wdl_f";
-	case "u_c_cbrn_suit_01_white_f";
-	case "u_b_cbrn_suit_01_tropic_f";
-	case "u_b_cbrn_suit_01_mtp_f";
-	case "u_c_cbrn_suit_01_blue_f": {CBRN_SUIT_PROTECTION};
-	default {NO_PROTECTION};
-};
+private _uniformPro = if ((uniform player) in _cbrnUniforms) then {CBRN_SUIT_PROTECTION} else {NO_PROTECTION};
 
 private _protection = [(_maskPro select 0) + (_uniformPro select 0),(_maskPro select 1) + (_uniformPro select 1)];
 

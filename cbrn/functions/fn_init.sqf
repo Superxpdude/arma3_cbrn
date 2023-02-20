@@ -84,7 +84,12 @@ if (hasInterface) then {
 	SXP_CBRN_pp_handle ppEffectCommit 0;
 	
 	// Add our inventory update event handler
-	SXP_CBRN_inventoryEH = ["loadout", SXP_CBRN_fnc_updateProtectionValue, true] call CBA_fnc_addPlayerEventHandler;
+	SXP_CBRN_inventoryEH = ["loadout", {
+		params ["_unit", "_new", "_old"];
+		// We execute this on each inventory update since it's quite a bit faster
+		// and less failure prone than checking if the facewear, backpack, or uniform changed
+		SXP_CBRN_protection = [_unit] call SXP_CBRN_fnc_getProtectionValue;
+	}, true] call CBA_fnc_addPlayerEventHandler;
 	
 	// Turn on the chemical detector UI
 	"SXP_CBRN_DETECTOR" cutRsc ["RscWeaponChemicalDetector", "PLAIN", 1, false];

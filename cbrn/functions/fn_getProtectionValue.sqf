@@ -134,4 +134,4 @@ private _uniformPro = if ((uniform player) in _cbrnUniforms) then {CBRN_SUIT_PRO
 
 private _protection = [(_maskPro select 0) + (_uniformPro select 0),(_maskPro select 1) + (_uniformPro select 1)];
 
-_protection
+_protection;

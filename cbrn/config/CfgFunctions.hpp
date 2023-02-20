@@ -8,6 +8,5 @@ class SXP_CBRN
 		class enterZone {}; // Enter CBRN zone
 		class getProtectionValue {}; // Return the protection value of equipped gear
 		class init {preInit = 1;}; // CBRN init
-		class updateProtectionValue {}; // Updates current protection value on inventory change
 	};
 };
